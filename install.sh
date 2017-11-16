@@ -20,7 +20,7 @@ source ~/.zshrc
 curl -L https://bit.ly/janus-bootstrap | bash
 
 # prepare folders
-mkdir -p ~/workspace/{github,gitlab,example}
+mkdir -p ~/workspace/{github,gitlab,myproject}
 
 # ssh-keygen 
 ssh-keygen -f id_rsa -t rsa -N ''
@@ -28,7 +28,7 @@ cat << EOF > ~/.ssh/config
 Host *
   UseKeychain yes
 Host test1
-  HostName test.example.com
+  HostName test.myproject.com
   User op
   IdentityFile ~/.ssh/op.pem
 Host test2
@@ -52,7 +52,7 @@ yrm use cnpm
 npm i -g yarn
 npm i -g lazyclone
 
-cd ~/workspace/example
+cd ~/workspace/myproject
 npm init -yes
 npm install webpack --save-dev
 npm install webpack-dev-server --save-dev
@@ -72,7 +72,7 @@ node_modules
 *~
 EOF
 
-cat << EOF > ~/workspace/example/.eslintrc.json
+cat << EOF > ~/workspace/myproject/.eslintrc.json
 {
     "env": {
         "browser": true,
@@ -112,7 +112,7 @@ cat << EOF > ~/workspace/example/.eslintrc.json
 }
 EOF
 
-cat << EOF > ~/workspace/example/webpack.config.js
+cat << EOF > ~/workspace/myproject/webpack.config.js
 module.exports = {
   entry:__dirname + '/src/index.js',                     // 唯一打包入口文件
   output: {
@@ -139,7 +139,7 @@ module.exports = {
 }
 EOF
 
-cat << EOF > ~/workspace/example/prod.webpack.config.js
+cat << EOF > ~/workspace/myproject/prod.webpack.config.js
 var devConfig = require("./webpack.config.js");
 var prodConfig = devConfig;
   prodConfig.output = {
