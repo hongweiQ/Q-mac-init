@@ -1,5 +1,5 @@
 # Q-mac-init
-  Initialize the MAC development environment
+  Initialize the MAC development environment for me.
 ## 1)Oh my zsh在iterm2下非常好用
 ## 2)git、wget、ack(搜索代码神器)、autojump(终端下多目录跳转神器)
 ## 3)vim需要安装janus集成开发环境
