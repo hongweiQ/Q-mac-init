@@ -1,12 +1,12 @@
 #! /bin/bash
 
-# oh my zsh
+# Install oh my zsh.
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
-# brew
+# Install brew.
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-# brew install
+# Install git/wget/ack/autojump/tree.
 brew install git
 brew install wget
 brew install ack
@@ -16,34 +16,36 @@ brew install tree
 echo '[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh' >> ~/.zshrc
 source ~/.zshrc
 
-# vim
+# Install vim integrated development environment.
 curl -L https://bit.ly/janus-bootstrap | bash
 
-# prepare folders
-mkdir -p ~/workspace/{github,gitlab,myproject}
+# Prepare folders.
+mkdir -p ~/workspace/{github,gitlab,nodejsStarterKit}
 
-# ssh-keygen 
+# Create ssh key pair and config file.
 ssh-keygen -f id_rsa -t rsa -N ''
 cat << EOF > ~/.ssh/config
 Host *
   UseKeychain yes
 Host test1
-  HostName test.myproject.com
-  User op
-  IdentityFile ~/.ssh/op.pem
+  HostName test.nodejsStarterKit.com
+  User dev
+  IdentityFile ~/.ssh/dev.pem
 Host test2
 	HostName test2
-	User	op
-	ProxyCommand ssh op@xxx.xxx.xxx.xxx nc %h %p
-  IdentityFile ~/.ssh/op.pem
+	User	dev
+	ProxyCommand ssh dev@xxx.xxx.xxx.xxx nc %h %p
+  IdentityFile ~/.ssh/dev.pem
 EOF
 
-# node version manager - nvm
+# Install nvm.
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash
 # NVM New verison have fix this bug.
 #echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.zshrc
 #echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm' >> ~/.zshrc
 source ~/.zshrc
+
+# Install nodejs/yrm/yarn/lazyclone
 nvm install stable
 nvm alias default stable
 nvm use stable
@@ -52,14 +54,10 @@ yrm use cnpm
 npm i -g yarn
 npm i -g lazyclone
 
-cd ~/workspace/myproject
-npm init -yes
-npm install webpack --save-dev
-npm install webpack-dev-server --save-dev
-npm install babel-loader babel-core babel-preset-es2015 --save-dev
-npm install eslint eslint-loader --save-dev
-npm install pre-commit --save-dev
-
+# Create project
+cd ~/workspace/nodejsStarterKit
+mkdir src bin
+git init
 cat << EOF >.gitignore
 # debugging logs
 *.log
@@ -71,8 +69,16 @@ node_modules
 *.tmp
 *~
 EOF
+npm set init-author-name 'hongwei qian'
+npm set init-author-email 'hongweiq@hotmail.com'
+npm set init-author-url 'https://github.com/hongweiQ'
+npm set init-license 'MIT'
+npm init -y
 
-cat << EOF > ~/workspace/myproject/.eslintrc.json
+# Install ESLint
+npm install eslint eslint-loader eslint-plugin-react --save-dev
+# eslint --init
+cat << EOF > ~/workspace/nodejsStarterKit/.eslintrc.json
 {
     "env": {
         "browser": true,
@@ -112,7 +118,14 @@ cat << EOF > ~/workspace/myproject/.eslintrc.json
 }
 EOF
 
-cat << EOF > ~/workspace/myproject/webpack.config.js
+# Install Babel
+npm install babel-loader babel-core babel-preset-es2015 babel-preset-es2016 babel-preset-es2017 --save-dev
+
+# setting up webpack
+npm install webpack --save-dev
+npm i -g webpack
+npm install webpack-dev-server --save-dev
+cat << EOF > ~/workspace/nodejsStarterKit/webpack.config.js
 module.exports = {
   entry:__dirname + '/src/index.js',                     // 唯一打包入口文件
   output: {
@@ -131,7 +144,7 @@ module.exports = {
         exclude: /(node_modules|bower_components)/, // 这些文件夹不用打包
         loader: 'babel-loader',
         query: {
-          presets: ['es2015']
+          presets: ['es2016']
         }
       }
     ]
@@ -139,12 +152,27 @@ module.exports = {
 }
 EOF
 
-cat << EOF > ~/workspace/myproject/prod.webpack.config.js
+# Pre Commit hook
+npm install pre-commit --save-dev
+#vim package.json
+#  "scripts": {
+#    "start": "webpack-dev-server",
+#    "test": "webpack"
+#  },
+#  "pre-commit": [
+#    "test"
+#  ]
+
+cat << EOF > ~/workspace/nodejsStarterKit/prod.webpack.config.js
 var devConfig = require("./webpack.config.js");
 var prodConfig = devConfig;
   prodConfig.output = {
-    path: "dist",
+    path: "bin",
     filename: "bundle.js"
   };
 module.exports = prodConfig;
 EOF
+
+# reference：
+# http://voidcanvas.com/setup-javascript-project-environment-with-webpack-eslint-babel-git/
+# https://github.com/i5ting/i5ting-mac-init
