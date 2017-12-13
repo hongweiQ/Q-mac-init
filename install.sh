@@ -122,9 +122,8 @@ EOF
 npm install babel-loader babel-core babel-preset-es2015 babel-preset-es2016 babel-preset-es2017 --save-dev
 
 # setting up webpack
-npm install webpack --save-dev
-npm i -g webpack
-npm install webpack-dev-server --save-dev
+npm install webpack webpack-dev-server --save-dev
+npm i -g webpack webpack-dev-server
 cat << EOF > ~/workspace/nodejsStarterKit/webpack.config.js
 module.exports = {
   entry:__dirname + '/src/index.js',                     // 唯一打包入口文件
