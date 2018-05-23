@@ -15,11 +15,3 @@
 ### c) 安装webpack
 ### d) 安装ESLint
 ### e) 安装Babel
-
-
-
-hotfix
-iss53
-iss53
-
-master2
